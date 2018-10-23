@@ -1,42 +1,50 @@
-$(document).ready(function(){
-	
-	// SUBMIT FORM
-    $("form").submit(function(event) {
-		// Prevent the form from submitting via the browser.
-		event.preventDefault();
-		
-		var inputs = $(this).find('input');
-		
-    	// prepare data from input-form
-    	var data = {
-    		titulo : $(inputs[0]).val(),
-    		status : $(inputs[1]).val()
-    	}
-    	window.alert("HOLA");
-		ajaxPost(data);
-    	
-    	// reset input data
-    	$(inputs[0]).val("");
-    	$(inputs[1]).val("")
-	});
-    
-    function ajaxPost(data){
-    	
-    	// DO POST
-    	$.ajax({
-			type : "POST",
-			contentType : "application/json",
-			url : window.location + "/api/customer/save",
-			data : JSON.stringify(data),
-			dataType: 'text',
-			success : function(result) {
-				$("#postResultMsg").html("<p style='background-color:#7FA7B0; color:white; padding:20px 20px 20px 20px'>" + result);
-			},
-			error : function(e) {
-				alert("Error!")
-			}
-		});
-    	
-    }
-    
-});
+ $(document).ready(function() {
+      
+      $('#stackedForm').submit(function(event) {
+    	  
+    	  var producer = $('#stackedFirstName').val();
+    	  var model = $('#stackedLastName').val();
+
+    	  var json = { "titulo" : producer, "status" : model};
+    	  
+        $.ajax({
+        	url: $("#stackedForm").attr( "action"),
+        	data: JSON.stringify(json),
+        	type: "POST",
+        	
+        	beforeSend: function(xhr) {
+        		xhr.setRequestHeader("Accept", "application/json");
+        		xhr.setRequestHeader("Content-Type", "application/json");
+        		$(".error").remove();
+        	},
+        	success: function(pelicula) {
+        		var respContent = "";
+        		
+		  		respContent += "<span class='success'>Smartphone was created: [";
+		  		respContent += pelicula.titulo + " : ";
+		  		respContent += pelicula.status + " : " ;
+		  		respContent +=  "]</span>";
+        		
+        		$("#postResultMsg").html(respContent);   		
+        	},
+        	error: function(jqXHR, textStatus, errorThrown) {
+        		var respBody = $.parseJSON(jqXHR.responseText);
+        		var respContent = "";
+        		
+        		respContent += "<span class='error-main'>";
+        		respContent += respBody.message;
+        		respContent += "</span>";
+        		
+        		$("#postResultMsg").html(respContent);
+        		
+        		$.each(respBody.fieldErrors, function(index, errEntity) {
+        			var tdEl = $("."+errEntity.fieldName+"-info");
+        			tdEl.html("<span class=\"error\">"+errEntity.fieldError+"</span>");
+        		});
+        	}
+        });
+         
+        event.preventDefault();
+      });
+       
+    });   

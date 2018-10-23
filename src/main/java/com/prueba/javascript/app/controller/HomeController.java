@@ -5,13 +5,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.prueba.javascript.app.model.Pelicula;
 
@@ -23,6 +28,11 @@ public class HomeController {
 		return "form";
 	}
 
+	@RequestMapping(value = "/datePicker", method = RequestMethod.GET)
+	public String goDatePicker() {
+		return "datePicker";
+	}
+	
 	@RequestMapping(value = "/home", method = RequestMethod.GET)
 	public String goHome() {
 		return "home";
@@ -113,12 +123,30 @@ public class HomeController {
 
 		return lista;
 	}
-	@RequestMapping(value = "/formapi/costumer/save", method = RequestMethod.POST)
-	public String save(Model model) {
-		
-
-		return "detalle";
+//	@RequestMapping(value = "/form/api/costumer/save", method=RequestMethod.POST,
+//            produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//	public String save(Model model) {
+//		
+//
+//		return "detalle";
+//	}
+	
+//	@RequestMapping(value="/form/api/costumer/save", method=RequestMethod.GET)
+//	public ModelAndView createSmartphonePage() {
+//		ModelAndView mav = new ModelAndView("form");
+//		mav.addObject("sPhone", new Pelicula());
+//		return mav;
+//	}
+	
+	@RequestMapping(value="/form/api/costumer/save", method=RequestMethod.POST, 
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Pelicula createSmartphone(@RequestBody @Valid Pelicula pelicula) {
+		return pelicula;
 	}
+	
+	
 
 	
 

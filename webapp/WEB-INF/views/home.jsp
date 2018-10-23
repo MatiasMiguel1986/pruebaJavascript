@@ -56,5 +56,6 @@
 			</tbody>
 		</table>
 	</div>
+	<a href="${pageContext.request.contextPath}/form.html">Crear una pelicula</a><br/>
 </body>
 </html>
